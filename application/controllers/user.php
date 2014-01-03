@@ -1,7 +1,14 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
-
+class User extends CI_Controller {
+    function __construct()
+    {
+        // Call the Model constructor
+        parent::__construct();
+		$this->load->model('Utente_model');
+		$this->load->helper('url');
+    }
+	
 	/**
 	 * Index Page for this controller.
 	 *
@@ -19,12 +26,25 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->model('Utente_model');
+		redirect('/user/profile');
+	}
+	
+	public function list_all(){
+		$temp['data']=$this->Utente_model->get_all();
+		$this->load->view('user_list',$temp);
+	}
+	
+	public function insert(){
+		$dati = $this->input->post('utente');
+		$this->Utente_model->insert($dati);
+		redirect('/CodeIgniter/index.php/utente/list_all');
+	}
+	
+	public function profile()
+	{
+		$temp['data']=$this->Utente_model->get_all();
 		
-		$temp['nome']='Matteo';
-		$temp['utenti']=$this->Utente_model->get_all();
-		
-		$this->load->view('login_page',$temp);
+		$this->load->view('user_profile',$temp);
 	}
 }
 
